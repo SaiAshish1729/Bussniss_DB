@@ -1,5 +1,5 @@
 const controller = require("../Controllers/userController");
-const { createUserValidation } = require("../Validations/userVal");
+const { createUserValidation, getAllUserstValidation } = require("../Validations/userVal");
 
 module.exports = [
     {
@@ -31,17 +31,17 @@ module.exports = [
             tags: ['api', 'User'],
             description: "Fetch All Users",
             handler: controller.allUsersWithDetails,
-            // validate: {
-            //     ...createUserValidation,
-            //     failAction: (request, h, err) => {
-            //         const customErrorMessages = err.details.map(detail => detail.message);
-            //         return h.response({
-            //             statusCode: 400,
-            //             error: 'Bad Request',
-            //             message: customErrorMessages
-            //         }).code(400).takeover();
-            //     }
-            // },
+            validate: {
+                ...getAllUserstValidation,
+                failAction: (request, h, err) => {
+                    const customErrorMessages = err.details.map(detail => detail.message);
+                    return h.response({
+                        statusCode: 400,
+                        error: 'Bad Request',
+                        message: customErrorMessages
+                    }).code(400).takeover();
+                }
+            },
         }
 
     },

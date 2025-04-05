@@ -71,8 +71,26 @@ const allUsersWithDetails = async (req, h) => {
         // if (![ROLES.ADMIN].includes(admin.role.role)) {
         //     return h.response({ message: "You are not allowed to access this information!" }).code(401);
         // }
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 1;
+
+        const skip = (page - 1) * limit;
+
+        // searching...
+        const search = req.query.search_input || "";
+        const matchStage = search
+            ? {
+                $match: {
+                    $or: [
+                        { name: { $regex: search, $options: "i" }, }, // case-insensitive search
+                        { contact_no: { $regex: `^${search}`, $options: "i" } } // search from start
+                    ]
+                },
+            }
+            : null;
 
         const allUserList = await User.aggregate([
+            ...(matchStage ? [matchStage] : []),
             {
                 $lookup: {
                     from: "roles",
@@ -84,27 +102,34 @@ const allUsersWithDetails = async (req, h) => {
             { $unwind: { path: "$role", preserveNullAndEmptyArrays: true } },
             {
                 $lookup: {
-                    from: "roles",
-                    localField: "role_id",
-                    foreignField: "_id",
-                    as: "role"
-                },
-            },
-            {
-                $lookup: {
-                    from: "debts", // ✅ Lookup debts collection
-                    localField: "_id", // ✅ User _id
-                    foreignField: "user_id", // ✅ Matching user_id in debts
+                    from: "debts",
+                    localField: "_id",
+                    foreignField: "user_id",
                     as: "debts"
                 },
             },
 
+            {
+                $facet: {
+                    data: [
+                        { $skip: skip },
+                        { $limit: limit }
+                    ],
+                    totalCount: [
+                        { $count: "total" }
+                    ]
+                }
+            }
 
         ]);
-
         return h.response({
-            success: true, message: "New user details created successfully.",
+            success: true, message: "New user details fetched successfully.",
             data: allUserList,
+            meta: {
+                Total_users: allUserList[0].totalCount[0]?.total || 0,
+                current_page: page,
+                limit_per_page: limit,
+            },
         }).code(200)
 
     } catch (error) {
