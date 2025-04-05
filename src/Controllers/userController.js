@@ -140,7 +140,36 @@ const allUsersWithDetails = async (req, h) => {
 
 const fetchSingleUserDetails = async (req, h) => {
     try {
+        const { _id } = req.query;
+        const userObjectId = new mongoose.Types.ObjectId(_id);
+        const userData = await User.aggregate([
+            {
+                $match: {
+                    _id: userObjectId
+                }
+            },
 
+            {
+                $lookup: {
+                    from: "roles",
+                    localField: "role_id",
+                    foreignField: "_id",
+                    as: "role"
+                },
+            },
+            { $unwind: { path: "$role", preserveNullAndEmptyArrays: true } },
+            {
+                $lookup: {
+                    from: "debts",
+                    localField: "_id",
+                    foreignField: "user_id",
+                    as: "debts"
+                },
+            },
+
+        ]);
+
+        return h.response({ success: true, message: "User details fetched successfully.", data: userData }).code(200);
     } catch (error) {
         console.log(error);
         return h.response({ message: "Server error while fetching single user's details.", error }).code(500);

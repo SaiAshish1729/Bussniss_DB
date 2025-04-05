@@ -25,8 +25,14 @@ const getAllUserstValidation = {
     })
 }
 
+const getSingleUserstValidation = {
+    query: Joi.object({
+        _id: Joi.string().label("_id"),
+    })
+}
+
 module.exports = {
     createUserValidation,
     getAllUserstValidation,
-
+    getSingleUserstValidation,
 }
