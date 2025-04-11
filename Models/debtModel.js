@@ -6,11 +6,11 @@ const debtSchema = new mongoose.Schema({
         ref: "Users",
         required: true,
     },
-    transaction_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "transactions",
-        default: null,
-    },
+    // transaction_id: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "transactions",
+    //     default: null,
+    // },
     amount_given: {
         type: String,
     },

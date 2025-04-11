@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { TRANSACTION_MODE } = require('../utills');
 
 const createUserValidation = {
     payload: Joi.object({
@@ -31,8 +32,20 @@ const getSingleUserstValidation = {
     })
 }
 
+const depositInstallmentValidation = {
+    query: Joi.object({
+        debt_id: Joi.string().required().label("debt_id"),
+    }),
+    payload: Joi.object({
+        amount: Joi.number().positive().required().label("amount"),
+        note: Joi.string().optional().allow('').label("Note"),
+        amount_recived_mode: Joi.string().valid(TRANSACTION_MODE.ONLINE, TRANSACTION_MODE.CASH).required().label("amount_recived_mode")
+    })
+};
+
 module.exports = {
     createUserValidation,
     getAllUserstValidation,
     getSingleUserstValidation,
+    depositInstallmentValidation,
 }

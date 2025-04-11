@@ -3,6 +3,7 @@ const Debt = require("../../Models/debtModel");
 const User = require("../../Models/userModel");
 const { ROLES } = require("../utills");
 const Role = require("../../Models/roleModel");
+const Transactions = require("../../Models/transactionModel");
 
 // const addNewUser = async (req, h) => {
 //     const session = await mongoose.startSession();
@@ -176,8 +177,44 @@ const fetchSingleUserDetails = async (req, h) => {
     }
 }
 
+// transaction
+const depositInstallment = async (req, h) => {
+    try {
+        const { debt_id } = req.query;
+        const { amount, note, amount_recived_mode, } = req.payload;
+        const debtExists = await Debt.findOne({ _id: debt_id });
+
+        if (!debtExists) {
+            return h.response({ message: "No any debt found with this Id." }).code(404);
+        }
+
+        const createTransaction = await Transactions({
+            user_id: debtExists.user_id,
+            debt_id: debtExists._id,
+            amount, note, amount_recived_mode
+        });
+        await createTransaction.save();
+        return h.response({ success: true, message: "Installment deposited successfully.", data: createTransaction });
+    } catch (error) {
+        console.log(error);
+        return h.response({ message: "Server error while deposit installment.", error }).code(500);
+    }
+}
+
+// all transactions of a particular debt
+const singleDebtsAllTransactions = async (req, h) => {
+    try {
+
+    } catch (error) {
+        console.log(error);
+        return h.response({ message: "Server error while fetching single debt transactions.", error }).code(500);
+    }
+}
+
 module.exports = {
     addNewUser,
     allUsersWithDetails,
     fetchSingleUserDetails,
+    depositInstallment,
+    singleDebtsAllTransactions
 }

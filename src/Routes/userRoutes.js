@@ -1,5 +1,5 @@
 const controller = require("../Controllers/userController");
-const { createUserValidation, getAllUserstValidation, getSingleUserstValidation } = require("../Validations/userVal");
+const { createUserValidation, getAllUserstValidation, getSingleUserstValidation, depositInstallmentValidation } = require("../Validations/userVal");
 
 module.exports = [
     {
@@ -55,6 +55,29 @@ module.exports = [
             handler: controller.fetchSingleUserDetails,
             validate: {
                 ...getSingleUserstValidation,
+                failAction: (request, h, err) => {
+                    const customErrorMessages = err.details.map(detail => detail.message);
+                    return h.response({
+                        statusCode: 400,
+                        error: 'Bad Request',
+                        message: customErrorMessages
+                    }).code(400).takeover();
+                }
+            },
+        }
+
+    },
+
+    // deposit installment
+    {
+        method: 'POST',
+        path: '/user/deposit-installment',
+        options: {
+            tags: ['api', 'User'],
+            description: "Deposit Installmen",
+            handler: controller.depositInstallment,
+            validate: {
+                ...depositInstallmentValidation,
                 failAction: (request, h, err) => {
                     const customErrorMessages = err.details.map(detail => detail.message);
                     return h.response({

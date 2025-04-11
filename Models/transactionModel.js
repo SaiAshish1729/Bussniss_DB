@@ -17,6 +17,7 @@ const transactionSchema = new mongoose.Schema({
     },
     note: {
         type: String,
+        default: null
     },
     amount_recived_mode: {
         type: String,
@@ -24,6 +25,19 @@ const transactionSchema = new mongoose.Schema({
     },
     status: {
         type: String,
+        defalt: null
+    },
+    created_at: {
+        type: Date,
+        default: Date.now(),
+    },
+    updated_at: {
+        type: Date,
+        default: Date.now(),
+    },
+    deleted_at: {
+        type: Date,
+        default: null,
     }
 });
 
