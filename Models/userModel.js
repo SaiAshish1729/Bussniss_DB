@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
     },
     role_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Roles", // ✅ Reference to "Roles" collection
+        ref: "Roles",
         required: true,
     },
     created_at: {

@@ -1,6 +1,6 @@
 const controller = require("../Controllers/adminController");
 const { createAdminValidation, adminLoginValidation } = require("../Validations/adminVal");
-// change here
+
 module.exports = [
     {
         method: 'POST',

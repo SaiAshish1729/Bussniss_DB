@@ -7,7 +7,7 @@ const HapiSwagger = require('hapi-swagger');
 const Pack = require('./package');
 const baseRouter = require('./src/Routes');
 const Connection = require('./DB/Connection');
-const { seedRoles } = require("./Seeders/roleSeeder.js")
+// const { seedRoles } = require("./Seeders/roleSeeder.js")
 require('dotenv').config();
 
 
