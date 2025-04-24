@@ -43,9 +43,17 @@ const depositInstallmentValidation = {
     })
 };
 
+const singleDebtsAllTransactionsValidations = {
+    payload: Joi.object({
+        user_id: Joi.string().required().label("user_id"),
+        debt_id: Joi.string().required().label("debt_id"),
+    })
+}
 module.exports = {
     createUserValidation,
     getAllUserstValidation,
     getSingleUserstValidation,
     depositInstallmentValidation,
+    singleDebtsAllTransactionsValidations,
+
 }

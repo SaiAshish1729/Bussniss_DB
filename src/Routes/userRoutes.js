@@ -1,5 +1,5 @@
 const controller = require("../Controllers/userController");
-const { createUserValidation, getAllUserstValidation, getSingleUserstValidation, depositInstallmentValidation } = require("../Validations/userVal");
+const { createUserValidation, getAllUserstValidation, getSingleUserstValidation, depositInstallmentValidation, singleDebtsAllTransactionsValidations } = require("../Validations/userVal");
 
 module.exports = [
     {
@@ -91,4 +91,26 @@ module.exports = [
 
     },
 
+    // all transactions of a debt_id
+    {
+        method: 'post',
+        path: '/user/all-transactions',
+        options: {
+            tags: ['api', 'User'],
+            description: "Fetch All Transaction By Debt_ID",
+            handler: controller.singleDebtsAllTransactions,
+            validate: {
+                ...singleDebtsAllTransactionsValidations,
+                failAction: (request, h, err) => {
+                    const customErrorMessages = err.details.map(detail => detail.message);
+                    return h.response({
+                        statusCode: 400,
+                        error: 'Bad Request',
+                        message: customErrorMessages
+                    }).code(400).takeover();
+                }
+            },
+        }
+
+    },
 ]

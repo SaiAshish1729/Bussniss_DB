@@ -58,11 +58,12 @@ const addNewUser = async (req, h) => {
         await debtInfo.save();
         return h.response({
             success: true, message: "New user details created successfully.",
-            data: newUserData,
-            meta: debtInfo,
+            // data: newUserData,
+            // meta: debtInfo,
         }).code(200)
     } catch (error) {
         console.log(error);
+        return h.response({ message: "Internal server error while adding a new user.", error })
     }
 };
 
@@ -204,7 +205,54 @@ const depositInstallment = async (req, h) => {
 // all transactions of a particular debt
 const singleDebtsAllTransactions = async (req, h) => {
     try {
+        const { user_id, debt_id } = req.payload;
+        const userExists = await User.findOne({ _id: user_id });
+        if (!userExists) {
+            return h.response({ message: "Oops! user not found with this user_id" }).code(404);
+        }
+        const hasDebt = await Debt.findOne({ _id: debt_id });
+        if (!hasDebt) {
+            return h.response({ message: "No debt found." }).code(404);
+        }
 
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 5;
+
+        const skip = (page - 1) * limit;
+
+        const allTransactions = await Transactions.aggregate([
+            {
+                $match: {
+                    user_id: new mongoose.Types.ObjectId(user_id),
+                    debt_id: new mongoose.Types.ObjectId(debt_id)
+                }
+            },
+            {
+                $facet: {
+                    data: [
+                        { $skip: skip },
+                        { $limit: limit }
+                    ],
+                    totalCount: [
+                        { $count: "total" }
+                    ]
+                }
+            }
+        ]);
+
+        const totalCount = allTransactions[0].totalCount[0]?.total || 0;
+        const totalPages = Math.ceil(totalCount / limit);
+
+        return h.response({
+            success: true, message: "All transaction of provided debt_id fetched successfully.",
+            data: allTransactions,
+            meta: {
+                total_transactions: totalCount,
+                current_page: page,
+                limit_per_page: limit,
+                total_pages: totalPages
+            }
+        })
     } catch (error) {
         console.log(error);
         return h.response({ message: "Server error while fetching single debt transactions.", error }).code(500);
