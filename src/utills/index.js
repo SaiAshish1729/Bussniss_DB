@@ -9,6 +9,11 @@ const TRANSACTION_MODE = {
     CASH: "Cash"
 }
 
+const TRANSACTION_FREQUENCY = {
+    MONTHLY: "Monthly",
+    WEEKLY: "Weekly",
+}
+
 module.exports = {
     ROLES,
     TRANSACTION_MODE
