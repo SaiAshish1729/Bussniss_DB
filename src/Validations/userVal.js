@@ -28,7 +28,7 @@ const getAllUserstValidation = {
 
 const getSingleUserstValidation = {
     query: Joi.object({
-        _id: Joi.string().label("_id"),
+        _id: Joi.string().label("_id").required(),
     })
 }
 

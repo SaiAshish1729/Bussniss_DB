@@ -58,9 +58,9 @@ const addNewUser = async (req, h) => {
         await debtInfo.save();
         return h.response({
             success: true, message: "New user details created successfully.",
-            // data: newUserData,
+            data: newUserData,
             // meta: debtInfo,
-        }).code(200)
+        }).code(201);
     } catch (error) {
         console.log(error);
         return h.response({ message: "Internal server error while adding a new user.", error })
@@ -252,7 +252,7 @@ const singleDebtsAllTransactions = async (req, h) => {
                 limit_per_page: limit,
                 total_pages: totalPages
             }
-        })
+        });
     } catch (error) {
         console.log(error);
         return h.response({ message: "Server error while fetching single debt transactions.", error }).code(500);
