@@ -41,7 +41,14 @@ const debtSchema = new mongoose.Schema({
         type: String,
         default: null
     },
-
+    discussed_duration: {
+        type: String,
+        default: "",
+    },
+    installment_amount: {
+        type: Number,
+        default: null,
+    },
     created_at: {
         type: Date,
         default: Date.now(),

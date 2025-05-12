@@ -12,9 +12,11 @@ const TRANSACTION_MODE = {
 const TRANSACTION_FREQUENCY = {
     MONTHLY: "Monthly",
     WEEKLY: "Weekly",
+    DAILY: "Daily",
 }
 
 module.exports = {
     ROLES,
-    TRANSACTION_MODE
+    TRANSACTION_MODE,
+    TRANSACTION_FREQUENCY
 }

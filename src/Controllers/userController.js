@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Debt = require("../../Models/debtModel");
 const User = require("../../Models/userModel");
-const { ROLES } = require("../utills");
+const { ROLES, TRANSACTION_FREQUENCY } = require("../utills");
 const Role = require("../../Models/roleModel");
 const Transactions = require("../../Models/transactionModel");
 
@@ -44,8 +44,19 @@ const addNewUser = async (req, h) => {
     try {
         const { name, contact_no, address, remark, reference, note,
             // debt related info
-            amount_given, amount_given_mode, debt_note, discussed_money_recive_frequency,
+            amount_given, amount_given_mode, debt_note, discussed_money_recive_frequency, discussed_duration,
         } = req.payload;
+        // const pay_amount = null
+        // console.log("discussed_duration : ", discussed_duration);
+        // if (discussed_money_recive_frequency === TRANSACTION_FREQUENCY.MONTHLY) {
+
+        // }
+        // if (discussed_money_recive_frequency === TRANSACTION_FREQUENCY.WEEKLY) {
+
+        // }
+        // if (discussed_money_recive_frequency === TRANSACTION_FREQUENCY.DAILY) {
+
+        // }
         const fetchRole = await Role.findOne({ role: ROLES.DEBT_CUSTOMER });
         const newUserData = await User({
             name, contact_no, address, role_id: fetchRole._id, remark, reference, note,
@@ -54,7 +65,7 @@ const addNewUser = async (req, h) => {
         const debtInfo = new Debt({
             user_id: newUserData._id,
             amount_given, amount_given_mode, debt_note, discussed_money_recive_frequency,
-        })
+        });
         await debtInfo.save();
         return h.response({
             success: true, message: "New user details created successfully.",
@@ -63,7 +74,7 @@ const addNewUser = async (req, h) => {
         }).code(201);
     } catch (error) {
         console.log(error);
-        return h.response({ message: "Internal server error while adding a new user.", error })
+        return h.response({ message: "Internal server error while adding a new user.", error });
     }
 };
 
