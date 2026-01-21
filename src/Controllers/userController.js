@@ -5,39 +5,6 @@ const { ROLES, TRANSACTION_FREQUENCY } = require("../utills");
 const Role = require("../../Models/roleModel");
 const Transactions = require("../../Models/transactionModel");
 
-// const addNewUser = async (req, h) => {
-//     const session = await mongoose.startSession();
-//     session.startTransaction();
-//     try {
-//         const { name, contact_no, address, remark, reference, note,
-//             // debt related info
-//             amount_given, amount_given_mode, debt_note, discussed_money_recive_frequency,
-//         } = req.payload;
-//         const fetchRole = await Role.findOne({ role: ROLES.DEBT_CUSTOMER });
-//         const newUserData = await User({
-//             name, contact_no, address, role_id: fetchRole._id, remark, reference, note,
-//         });
-//         await newUserData.save({ session });
-//         const debtInfo = new Debt({
-//             user_id: newUserData._id,
-//             amount_given, amount_given_mode, debt_note, discussed_money_recive_frequency,
-//         })
-//         await debtInfo.save({ session });
-
-//         // Commit the transaction
-//         await session.commitTransaction();
-//         session.endSession();
-
-//         return h.response({
-//             success: true, message: "New user details created successfully.",
-//             data: newUserData,
-//             meta: debtInfo,
-//         }).code(200)
-//     } catch (error) {
-//         console.log(error);
-//     }
-// };
-
 const addNewUser = async (req, h) => {
     // const session = await mongoose.startSession();
     // session.startTransaction();
@@ -179,7 +146,6 @@ const fetchSingleUserDetails = async (req, h) => {
                     as: "debts"
                 },
             },
-
         ]);
 
         return h.response({ success: true, message: "User details fetched successfully.", data: userData }).code(200);
