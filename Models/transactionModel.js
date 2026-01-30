@@ -5,6 +5,7 @@ const transactionSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Users",
         required: true,
+        indexedDB: true,
     },
     debt_id: {
         type: mongoose.Schema.Types.ObjectId,

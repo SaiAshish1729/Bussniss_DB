@@ -147,7 +147,6 @@ const fetchSingleUserDetails = async (req, h) => {
                 },
             },
         ]);
-
         return h.response({ success: true, message: "User details fetched successfully.", data: userData }).code(200);
     } catch (error) {
         console.log(error);
